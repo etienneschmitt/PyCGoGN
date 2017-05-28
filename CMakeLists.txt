@@ -1,0 +1,36 @@
+﻿cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+
+set(PYCGOGN_VERSION_MAJOR 0)
+set(PYCGOGN_VERSION_MINOR 1)
+set(PYCGOGN_VERSION_PATCH 0)
+
+project(pycgogn
+	VERSION ${PYCGOGN_VERSION_MAJOR}.${PYCGOGN_VERSION_MINOR}.${PYCGOGN_VERSION_PATCH}
+	LANGUAGES CXX
+)
+
+#### Default build type
+if(NOT CMAKE_BUILD_TYPE AND NOT MSVC)
+	set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+#### CGOGN_PATH / CGOGN_SOURCE_DIR
+set(CGOGN_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CGoGN_2" CACHE PATH "CGoGN root dir")
+set(CGOGN_BUILD_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CGoGN_2-build" CACHE PATH "CGoGN build or install dir")
+
+set(CGOGN_SOURCE_DIR ${CGOGN_PATH})
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${CGOGN_BUILD_PATH})
+
+include(${CGOGN_PATH}/cmake/utilities.cmake)
+
+if(MSVC)
+	add_flags(CMAKE_CXX_FLAGS "/bigobj")
+endif()
+
+#### Build configuration
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+
+add_subdirectory(pybind11)
+add_subdirectory(pycgogn)
