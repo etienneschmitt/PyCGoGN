@@ -72,14 +72,35 @@ void pycgogn::internal::gen_bindings_class_cmap2(py::module& m)
 	using CMap0 = CMap1::Inherit;
 	using MapBase = CMap0::Inherit;
 
+	using Vertex = CMap2::Vertex;
+	using Edge = CMap2::Edge;
+	using Face = CMap2::Face;
+	using Volume = CMap2::Volume;
+
 	py::class_<CMap0, MapBase>(m, "CMap0_2")
 			.def(py::init<>());
 	py::class_<CMap1, CMap0>(m, "CMap1_2")
 			.def(py::init<>());
 
+
 	py::class_<CMap2, CMap1>(m, "CMap2")
-			.def(py::init<>())
-			;
+		.def(py::init<>())
+		.def("foreach_incident_edge", [](const CMap2& map2, Vertex v, const std::function<void(Edge)>& func) { map2.foreach_incident_edge(v, func);} )
+		.def("foreach_incident_face", [](const CMap2& map2, Vertex v, const std::function<void(Face)>& func) { map2.foreach_incident_face(v, func);} )
+		.def("foreach_incident_volume", [](const CMap2& map2, Vertex v, const std::function<void(Volume)>& func) { map2.foreach_incident_volume(v, func);} )
+
+		.def("foreach_incident_vertex", [](const CMap2& map2, Edge e, const std::function<void(Vertex)>& func) { map2.foreach_incident_vertex(e, func);} )
+		.def("foreach_incident_face", [](const CMap2& map2, Edge e, const std::function<void(Face)>& func) { map2.foreach_incident_face(e, func);} )
+		.def("foreach_incident_volume", [](const CMap2& map2, Edge e, const std::function<void(Volume)>& func) { map2.foreach_incident_volume(e, func);} )
+
+		.def("foreach_incident_vertex", [](const CMap2& map2, Face f, const std::function<void(Vertex)>& func) { map2.foreach_incident_vertex(f, func);} )
+		.def("foreach_incident_edge", [](const CMap2& map2, Face f, const std::function<void(Edge)>& func) { map2.foreach_incident_edge(f, func);} )
+		.def("foreach_incident_volume", [](const CMap2& map2, Face f, const std::function<void(Volume)>& func) { map2.foreach_incident_volume(f, func);} )
+
+		.def("foreach_incident_vertex", [](const CMap2& map2, Volume w, const std::function<void(Vertex)>& func) { map2.foreach_incident_vertex(w, func);} )
+		.def("foreach_incident_edge", [](const CMap2& map2, Volume w, const std::function<void(Edge)>& func) { map2.foreach_incident_edge(w, func);} )
+		.def("foreach_incident_face", [](const CMap2& map2, Volume w, const std::function<void(Face)>& func) { map2.foreach_incident_face(w, func);} )
+		;
 }
 
 void pycgogn::internal::gen_bindings_class_cmap2_tri(py::module& m)
