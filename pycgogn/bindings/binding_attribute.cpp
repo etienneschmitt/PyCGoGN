@@ -36,20 +36,24 @@ PYCGOGN_API void pycgogn::gen_bindings_class_attribute_gen(py::module& m)
 
 PYCGOGN_API void pycgogn::gen_bindings_class_attribute_t(pybind11::module& m)
 {
-	using namespace cgogn;
-
-	internal::helper_class_attribute_t<int32>(m);
-	internal::helper_class_attribute_t<float64>(m);
-	internal::helper_class_attribute_t<Eigen::Vector3i>(m);
+	internal::helper_class_attribute_t<cgogn::int32>(m);
+	internal::helper_class_attribute_t<cgogn::float64>(m);
 	internal::helper_class_attribute_t<Eigen::Vector3d>(m);
+	internal::helper_class_attribute_t<Eigen::Vector4d>(m);
+	internal::helper_class_attribute_t<Eigen::VectorXd>(m);
+	internal::helper_class_attribute_t<Eigen::Matrix3d>(m);
+	internal::helper_class_attribute_t<Eigen::Matrix4d>(m);
+	internal::helper_class_attribute_t<Eigen::MatrixXd>(m);
 }
 
 PYCGOGN_API void pycgogn::gen_bindings_class_attribute(pybind11::module& m)
 {
-	using namespace cgogn;
-
-	internal::helper_class_attribute_2<int32>(m);
-	internal::helper_class_attribute_2<float64>(m);
-	internal::helper_class_attribute_2<Eigen::Vector3i>(m);
+	internal::helper_class_attribute_2<cgogn::int32>(m);
+	internal::helper_class_attribute_2<cgogn::float64>(m);
 	internal::helper_class_attribute_2<Eigen::Vector3d>(m);
+	internal::helper_class_attribute_2<Eigen::Vector4d>(m);
+	internal::helper_class_attribute_2<Eigen::VectorXd>(m);
+	internal::helper_class_attribute_2<Eigen::Matrix3d>(m);
+	internal::helper_class_attribute_2<Eigen::Matrix4d>(m);
+	internal::helper_class_attribute_2<Eigen::MatrixXd>(m);
 }
