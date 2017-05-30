@@ -33,6 +33,23 @@ namespace pycgogn
 
 namespace internal
 {
+template<typename MAP_TYPE, typename ATT_TYPE>
+void add_attribute_helper(py::class_<cgogn::MapBase<MAP_TYPE>, cgogn::MapBaseData>& c, const std::string& attribute_t)
+{
+	using MapBase = cgogn::MapBase<MAP_TYPE>;
+	using ConcreteMap = typename MapBase::ConcreteMap;
+	using Vertex = typename ConcreteMap::Vertex;
+	using Edge = typename ConcreteMap::Edge;
+	using Face = typename ConcreteMap::Face;
+	using Volume = typename ConcreteMap::Volume;
+
+	c.def(("add_vertex_attribute_" +attribute_t).c_str(), [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<ATT_TYPE, Vertex>(att_name); })
+	.def(("add_edge_attribute_" +attribute_t).c_str(), [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<ATT_TYPE, Edge>(att_name); })
+	.def(("add_face_attribute_" +attribute_t).c_str(), [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<ATT_TYPE, Face>(att_name); })
+	.def(("add_volume_attribute_" +attribute_t).c_str(), [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<ATT_TYPE, Volume>(att_name); })
+	;
+}
+
 template<typename MAP_TYPE>
 void helper_gen_bindings_class_map_base(py::module& m, const std::string& classname)
 {
@@ -43,37 +60,36 @@ void helper_gen_bindings_class_map_base(py::module& m, const std::string& classn
 	using Face = typename ConcreteMap::Face;
 	using Volume = typename ConcreteMap::Volume;
 
-	py::class_<MapBase, cgogn::MapBaseData>(m, classname.c_str())
+	auto c = py::class_<MapBase, cgogn::MapBaseData>(m, classname.c_str())
 		.def(py::init<>())
 		.def("nb_vertices", &MapBase::template nb_cells<Vertex::ORBIT>)
 		.def("nb_edges", &MapBase::template nb_cells<Edge::ORBIT>)
 		.def("nb_faces", &MapBase::template nb_cells<Face::ORBIT>)
 		.def("nb_volumes", &MapBase::template nb_cells<Volume::ORBIT>)
 
-		.def("foreach_vertex", [](const MapBase& mb, const std::function<void(Vertex)> func) { mb.foreach_cell(func);} )
-		.def("foreach_edge", [](const MapBase& mb, const std::function<void(Edge)> func) { mb.foreach_cell(func);} )
-		.def("foreach_face", [](const MapBase& mb, const std::function<void(Face)> func) { mb.foreach_cell(func);} )
-		.def("foreach_volume", [](const MapBase& mb, const std::function<void(Volume)> func) { mb.foreach_cell(func);} )
+		.def("foreach_vertex", [](const MapBase& mb, const std::function<void(Vertex)>& func) { mb.foreach_cell(func);} )
+		.def("foreach_edge", [](const MapBase& mb, const std::function<void(Edge)>& func) { mb.foreach_cell(func);} )
+		.def("foreach_face", [](const MapBase& mb, const std::function<void(Face)>& func) { mb.foreach_cell(func);} )
+		.def("foreach_volume", [](const MapBase& mb, const std::function<void(Volume)>& func) { mb.foreach_cell(func);} )
 
-		.def("foreach_vertex_until", [](const MapBase& mb, const std::function<bool(Vertex)> func) { mb.foreach_cell([&](Vertex v) -> bool { return func(v); } ); })
-		.def("foreach_edge_until", [](const MapBase& mb, const std::function<bool(Edge)> func) { mb.foreach_cell([&](Edge e) -> bool { return func(e); } ); })
-		.def("foreach_face_until", [](const MapBase& mb, const std::function<bool(Face)> func) { mb.foreach_cell([&](Face f) -> bool { return func(f); } ); })
-		.def("foreach_volume_until", [](const MapBase& mb, const std::function<bool(Volume)> func) { mb.foreach_cell([&](Volume w) -> bool { return func(w); } ); })
+		.def("foreach_vertex_until", [](const MapBase& mb, const std::function<bool(Vertex)>& func) { mb.foreach_cell([&](Vertex v) -> bool { return func(v); } ); })
+		.def("foreach_edge_until", [](const MapBase& mb, const std::function<bool(Edge)>& func) { mb.foreach_cell([&](Edge e) -> bool { return func(e); } ); })
+		.def("foreach_face_until", [](const MapBase& mb, const std::function<bool(Face)>& func) { mb.foreach_cell([&](Face f) -> bool { return func(f); } ); })
+		.def("foreach_volume_until", [](const MapBase& mb, const std::function<bool(Volume)>& func) { mb.foreach_cell([&](Volume w) -> bool { return func(w); } ); })
 
-		.def("add_vertex_attribute_int", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::int32, Vertex>(att_name); })
-		.def("add_vertex_attribute_double", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::float64, Vertex>(att_name); })
-		.def("add_vertex_attribute_vec3d", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<Eigen::Vector3d, Vertex>(att_name); })
-		.def("add_edge_attribute_int", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::int32, Edge>(att_name); })
-		.def("add_edge_attribute_double", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::float64, Edge>(att_name); })
-		.def("add_edge_attribute_vec3d", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<Eigen::Vector3d, Edge>(att_name); })
-		.def("add_face_attribute_int", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::int32, Face>(att_name); })
-		.def("add_face_attribute_double", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::float64, Face>(att_name); })
-		.def("add_face_attribute_vec3d", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<Eigen::Vector3d, Face>(att_name); })
-		.def("add_volume_attribute_int", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::int32, Volume>(att_name); })
-		.def("add_volume_attribute_double", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<cgogn::float64, Volume>(att_name); })
-		.def("add_volume_attribute_vec3d", [](MapBase& mb, const std::string& att_name) { return mb.template add_attribute<Eigen::Vector3d, Volume>(att_name); })
 	;
+
+	add_attribute_helper<MAP_TYPE,int>(c, "int");
+	add_attribute_helper<MAP_TYPE,cgogn::float64>(c, "double");
+	add_attribute_helper<MAP_TYPE,Eigen::Vector3d>(c, "vec3d");
+	add_attribute_helper<MAP_TYPE,Eigen::Vector4d>(c, "vec4d");
+	add_attribute_helper<MAP_TYPE,Eigen::VectorXd>(c, "vec");
+	add_attribute_helper<MAP_TYPE,Eigen::Matrix3d>(c, "mat3d");
+	add_attribute_helper<MAP_TYPE,Eigen::Matrix4d>(c, "mat4d");
+	add_attribute_helper<MAP_TYPE,Eigen::MatrixXd>(c, "mat");
 }
+
+
 
 } // namespace internal
 
