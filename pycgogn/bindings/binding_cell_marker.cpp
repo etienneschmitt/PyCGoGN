@@ -21,34 +21,19 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <pycgogn/bindings/binding.h>
-#include <pycgogn/bindings/binding_dart.h>
-#include <pycgogn/bindings/binding_cell.h>
-#include <pycgogn/bindings/binding_attribute.h>
-#include <pycgogn/bindings/binding_map_base_data.h>
-#include <pycgogn/bindings/binding_map_base.h>
-#include <pycgogn/bindings/binding_cmaps.h>
-#include <pycgogn/bindings/binding_dart_marker.h>
 #include <pycgogn/bindings/binding_cell_marker.h>
-#include <pycgogn/bindings/binding_io.h>
+#include <cgogn/core/cmap/cmap3.h>
+#include <cgogn/core/cmap/cmap3_hexa.h>
+#include <cgogn/core/cmap/cmap3_tetra.h>
+#include <cgogn/core/cmap/cmap2_tri.h>
+#include <cgogn/core/cmap/cmap2_quad.h>
 
-namespace py = pybind11;
-
-PYBIND11_PLUGIN(pycgogn)
+void pycgogn::gen_bindings_class_cell_marker(pybind11::module& m)
 {
-	py::module m("pycgogn", "pycgogn DOC : TODO");
-
-	pycgogn::gen_bindings_class_dart(m);
-	pycgogn::gen_bindings_class_cell(m);
-	pycgogn::gen_bindings_class_attribute_gen(m);
-	pycgogn::gen_bindings_class_attribute_t(m);
-	pycgogn::gen_bindings_class_attribute(m);
-	pycgogn::gen_bindings_class_map_base_data(m);
-	pycgogn::gen_bindings_class_map_base(m);
-	pycgogn::gen_bindings_class_cmaps(m);
-	pycgogn::gen_bindings_class_dart_marker(m);
-	pycgogn::gen_bindings_class_cell_marker(m);
-	pycgogn::gen_binding_io(m);
-
-	return m.ptr();
+	internal::gen_bindings_class_cell_marker_helper<cgogn::CMap2>(m);
+	internal::gen_bindings_class_cell_marker_helper<cgogn::CMap2Tri>(m,"T");
+	internal::gen_bindings_class_cell_marker_helper<cgogn::CMap2Quad>(m, "Q");
+	internal::gen_bindings_class_cell_marker_helper<cgogn::CMap3>(m);
+	internal::gen_bindings_class_cell_marker_helper<cgogn::CMap3Tetra>(m, "T");
+	internal::gen_bindings_class_cell_marker_helper<cgogn::CMap3Hexa>(m, "H");
 }

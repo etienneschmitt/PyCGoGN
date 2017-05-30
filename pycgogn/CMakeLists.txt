@@ -13,6 +13,8 @@ set(HEADER_FILES
 	bindings/binding_map_base_data.h
 	bindings/binding_map_base.h
 	bindings/binding_cmaps.h
+	bindings/binding_cell_marker.h
+	bindings/binding_dart_marker.h
 	bindings/binding_io.h
 )
 
@@ -23,6 +25,8 @@ set(SOURCE_FILES
 	bindings/binding_map_base_data.cpp
 	bindings/binding_map_base.cpp
 	bindings/binding_cmaps.cpp
+	bindings/binding_cell_marker.cpp
+	bindings/binding_dart_marker.cpp
 	bindings/binding_io.cpp
 	bindings/pycgogn_module.cpp
 )
